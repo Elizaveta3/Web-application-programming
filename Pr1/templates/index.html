@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Веб-калькулятор</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Веб-калькулятор палива</h1>
+        <form method="POST" action="/">
+            <input type="hidden" name="calculator" value="fuel">
+            <label for="hydrogen">H<sup>P</sup>,%:</label>
+            <input type="number" step="any" id="hydrogen" name="hydrogen" required{{if .FuelInput}} value="{{fg .FuelInput.Hydrogen}}"{{end}}>
+            <label for="carbon">C<sup>P</sup>,%:</label>
+            <input type="number" step="any" id="carbon" name="carbon" required{{if .FuelInput}} value="{{fg .FuelInput.Carbon}}"{{end}}>
+            <label for="sulfur">S<sup>P</sup>,%:</label>
+            <input type="number" step="any" id="sulfur" name="sulfur" required{{if .FuelInput}} value="{{fg .FuelInput.Sulfur}}"{{end}}>
+            <label for="nitrogen">N<sup>P</sup>,%:</label>
+            <input type="number" step="any" id="nitrogen" name="nitrogen" required{{if .FuelInput}} value="{{fg .FuelInput.Nitrogen}}"{{end}}>
+            <label for="oxygen">O<sup>P</sup>,%:</label>
+            <input type="number" step="any" id="oxygen" name="oxygen" required{{if .FuelInput}} value="{{fg .FuelInput.Oxygen}}"{{end}}>
+            <label for="moisture">W<sup>P</sup>,%:</label>
+            <input type="number" step="any" id="moisture" name="moisture" required{{if .FuelInput}} value="{{fg .FuelInput.Moisture}}"{{end}}>
+            <label for="ash">A<sup>P</sup>,%:</label>
+            <input type="number" step="any" id="ash" name="ash" required{{if .FuelInput}} value="{{fg .FuelInput.Ash}}"{{end}}>
+            <p></p>
+            <button type="submit">Порахувати</button>
+        </form>
+
+        {{if .ShowFuelResult}}
+        <p>Для палива з компонентним складом: H<sup>P</sup>={{fg .FuelInput.Hydrogen}}%, C<sup>P</sup>={{fg .FuelInput.Carbon}}%, S<sup>P</sup>={{fg .FuelInput.Sulfur}}%, N<sup>P</sup>={{fg .FuelInput.Nitrogen}}%, O<sup>P</sup>={{fg .FuelInput.Oxygen}}%, W<sup>P</sup>={{fg .FuelInput.Moisture}}%, A<sup>P</sup>={{fg .FuelInput.Ash}}%.</p>
+
+        <p>Коефіцієнт переходу від робочої до сухої маси становить K<sup>PС</sup>: {{f2 .DryMass.K}}</p>
+        <p>Склад сухої маси палива становитиме:</p>
+        <p>H<sup>С</sup>: {{f2 .DryMass.H}}%</p>
+        <p>C<sup>С</sup>: {{f2 .DryMass.C}}%</p>
+        <p>S<sup>С</sup>: {{f2 .DryMass.S}}%</p>
+        <p>N<sup>С</sup>: {{f2 .DryMass.N}}%</p>
+        <p>O<sup>С</sup>: {{f2 .DryMass.O}}%</p>
+        <p>A<sup>С</sup>: {{f2 .DryMass.A}}%</p>
+
+        <p>Коефіцієнт переходу від робочої до горючої маси становить K<sup>PГ</sup>: {{f2 .CombustibleMass.K}}</p>
+        <p>Склад горючої маси палива становитиме:</p>
+        <p>H<sup>Г</sup>: {{f2 .CombustibleMass.H}}%</p>
+        <p>C<sup>Г</sup>: {{f2 .CombustibleMass.C}}%</p>
+        <p>S<sup>Г</sup>: {{f2 .CombustibleMass.S}}%</p>
+        <p>N<sup>Г</sup>: {{f2 .CombustibleMass.N}}%</p>
+        <p>O<sup>Г</sup>: {{f2 .CombustibleMass.O}}%</p>
+
+        <p>Нижча теплота згоряння, МДж/кг: {{f2 .HeatCombustion.Q}}</p>
+        <p>Нижча теплота згоряння для сухої маси, МДж/кг: {{f2 .HeatCombustion.QDry}}</p>
+        <p>Нижча теплота згоряння для горючої маси, МДж/кг: {{f2 .HeatCombustion.QCombustible}}</p>
+        {{end}}
+
+        <h1>Веб-калькулятор мазути</h1>
+        <form method="POST" action="/">
+            <input type="hidden" name="calculator" value="fuel-oil">
+            <label for="carbon-fuel-oil">C<sup>Г</sup>,%:</label>
+            <input type="number" step="any" id="carbon-fuel-oil" name="carbon-fuel-oil" required{{if .FuelOilInput}} value="{{fg .FuelOilInput.Carbon}}"{{end}}>
+            <label for="hydrogen-fuel-oil">H<sup>Г</sup>,%:</label>
+            <input type="number" step="any" id="hydrogen-fuel-oil" name="hydrogen-fuel-oil" required{{if .FuelOilInput}} value="{{fg .FuelOilInput.Hydrogen}}"{{end}}>
+            <label for="sulfur-fuel-oil">S<sup>Г</sup>,%:</label>
+            <input type="number" step="any" id="sulfur-fuel-oil" name="sulfur-fuel-oil" required{{if .FuelOilInput}} value="{{fg .FuelOilInput.Sulfur}}"{{end}}>
+            <label for="vanadi-fuel-oil">V<sup>Г</sup>,мг/кг:</label>
+            <input type="number" step="any" id="vanadi-fuel-oil" name="vanadi-fuel-oil" required{{if .FuelOilInput}} value="{{fg .FuelOilInput.Vanadium}}"{{end}}>
+            <label for="oxygen-fuel-oil">O<sup>Г</sup>,%:</label>
+            <input type="number" step="any" id="oxygen-fuel-oil" name="oxygen-fuel-oil" required{{if .FuelOilInput}} value="{{fg .FuelOilInput.Oxygen}}"{{end}}>
+            <label for="moisture-fuel-oil">W<sup>Г</sup>,%:</label>
+            <input type="number" step="any" id="moisture-fuel-oil" name="moisture-fuel-oil" required{{if .FuelOilInput}} value="{{fg .FuelOilInput.Moisture}}"{{end}}>
+            <label for="ash-fuel-oil">A<sup>Г</sup>,%:</label>
+            <input type="number" step="any" id="ash-fuel-oil" name="ash-fuel-oil" required{{if .FuelOilInput}} value="{{fg .FuelOilInput.Ash}}"{{end}}>
+            <p></p>
+            <label for="lower-heat-combustion">Q<sub>i</sub><sup>daf</sup>, МДж/кг:</label>
+            <input type="number" step="any" id="lower-heat-combustion" name="lower-heat-combustion" required{{if .FuelOilInput}} value="{{fg .FuelOilInput.HeatCombustion}}"{{end}}>
+            <p></p>
+            <button type="submit">Порахувати</button>
+        </form>
+
+        {{if .ShowFuelOilResult}}
+        <p>Для складу горючої маси мазуту, що задано наступними параметрами: H<sup>Г</sup>={{fg .FuelOilInput.Hydrogen}}%, C<sup>Г</sup>={{fg .FuelOilInput.Carbon}}%, S<sup>Г</sup>={{fg .FuelOilInput.Sulfur}}%, V<sup>Г</sup>={{fg .FuelOilInput.Vanadium}}%, O<sup>Г</sup>={{fg .FuelOilInput.Oxygen}}%, W<sup>Г</sup>={{fg .FuelOilInput.Moisture}}%, A<sup>Г</sup>={{fg .FuelOilInput.Ash}}% та нижчою теплотою згоряння горючої маси мазуту Q<sub>i</sub><sup>daf</sup>={{fg .FuelOilInput.HeatCombustion}} МДж/кг</p>
+
+        <p>Склад робочої маси мазуту становитиме:</p>
+        <p>H<sup>Р</sup>: {{f2 .FuelOilComposition.H}}%</p>
+        <p>C<sup>Р</sup>: {{f2 .FuelOilComposition.C}}%</p>
+        <p>S<sup>Р</sup>: {{f2 .FuelOilComposition.S}}%</p>
+        <p>V<sup>Р</sup>: {{f2 .FuelOilComposition.V}} мг/кг</p>
+        <p>O<sup>Р</sup>: {{f2 .FuelOilComposition.O}}%</p>
+        <p>A<sup>Р</sup>: {{f2 .FuelOilComposition.A}}%</p>
+
+        <p>Нижча теплота згоряннямазуту на робочу масу для робочої маси за заданим складом компонентів палива становить, МДж/кг: {{f2 .FuelOilHeat}}</p>
+        {{end}}
+    </div>
+</body>
+</html>
