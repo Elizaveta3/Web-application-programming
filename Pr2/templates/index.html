@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Веб-калькулятор</title>
+</head>
+<body>
+<h1>Веб-калькулятор для розрахунку валових викидів шкідливих речовин при спалювання вугілля, мазуту та природного газу</h1>
+
+<section>
+    <h2>Внесіть дані:</h2>
+    <form method="POST" action="/">
+        <label for="coal">
+            <input type="text" name="coal" id="coal" placeholder="First number" value="{{.Coal}}">
+        </label>
+
+        <label for="oil-fuel">
+            <input type="text" name="oil-fuel" id="oil-fuel" placeholder="Second number" value="{{.OilFuel}}">
+        </label>
+
+        <label for="natural-gas">
+            <input type="text" name="natural-gas" id="natural-gas" placeholder="Third number" value="{{.NaturalGas}}">
+        </label>
+
+        <button type="submit">Submit</button>
+    </form>
+    {{if .Submitted}}
+    <div>
+        <p>
+            <span>Показник емісії твердих частинок при спалюванні вугілля становитиме: </span>
+            <span>{{.EmissionCoal}}</span>
+            <span> г/ГДж</span>
+        </p>
+        <p>
+            <span>Валовий викид при спалюванні вугілля становитиме: </span>
+            <span>{{.GrossEmissionCoal}}</span>
+            <span> т.</span>
+        </p>
+        <p>
+            <span>Показник емісії твердих частинок при спалюванні мазуту становитиме: </span>
+            <span>{{.EmissionOilFuel}}</span>
+            <span> г/ГДж</span>
+        </p>
+        <p>
+            <span>Валовий викид при спалюванні мазуту становитиме: </span>
+            <span>{{.GrossEmissionOilFuel}}</span>
+            <span> т.</span>
+        </p>
+        <p>
+            <span>Показник емісії твердих частинок при спалюванні природного газу становитиме: </span>
+            <span>{{.EmissionNaturalGas}}</span>
+            <span> г/ГДж</span>
+        </p>
+        <p>
+            <span>Валовий викид при спалюванні природного газу становитиме:</span>
+            <span>{{.GrossEmissionNaturalGas}}</span>
+            <span> т.</span>
+        </p>
+    </div>
+    {{end}}
+</section>
+
+</body>
+</html>
