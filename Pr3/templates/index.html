@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <title>Веб-калькулятор</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+
+<h1>Веб-калькулятор для розрахунку електричних навантажень об’єктів з
+  використанням методу впорядкованих діаграм</h1>
+
+<section>
+  <h2>Внесіть дані:</h2>
+
+  <form method="POST" action="/" id="calculator-form">
+    <div>
+      <label>Найменування ЕП</label>
+      <label>η<sub>н</sub></label>
+      <label>cosφ</label>
+      <label>U<sub>н</sub></label>
+      <label>n</label>
+      <label>P<sub>н</sub></label>
+      <label>K<sub>в</sub></label>
+      <label>tgφ</label>
+    </div>
+
+    <div>
+      <input type="text" name="name-of-EP" placeholder="Шліфувальний верстат" value="{{.EP1.Name}}">
+      <input type="text" name="nominal-value-efficiency-coefficient" placeholder="0,92" value="{{printf "%g" .EP1.Eta}}">
+      <input type="text" name="load-power-factor" placeholder="0,9" value="{{printf "%g" .EP1.Cos}}">
+      <input type="text" name="load-voltage" placeholder="0,38" value="{{printf "%g" .EP1.U}}">
+      <input type="text" name="number-of-EP" placeholder="4" value="{{printf "%g" .EP1.N}}">
+      <input type="text" name="nominal-power-of-EP" placeholder="28" value="{{printf "%g" .EP1.Pn}}">
+      <input type="text" name="utilization-rate" placeholder="0,15" value="{{printf "%g" .EP1.Kv}}">
+      <input type="text" name="reactive-power-factor" placeholder="1,33" value="{{printf "%g" .EP1.Tg}}">
+    </div>
+
+    <div>
+      <input type="text" name="name-of-EP-2" placeholder="Полірувальний верстат" value="{{.EP2.Name}}">
+      <input type="text" name="nominal-value-efficiency-coefficient-2" placeholder="0,92" value="{{printf "%g" .EP2.Eta}}">
+      <input type="text" name="load-power-factor-2" placeholder="0,9" value="{{printf "%g" .EP2.Cos}}">
+      <input type="text" name="load-voltage-2" placeholder="0,38" value="{{printf "%g" .EP2.U}}">
+      <input type="text" name="number-of-EP-2" placeholder="1" value="{{printf "%g" .EP2.N}}">
+      <input type="text" name="nominal-power-of-EP-2" placeholder="40" value="{{printf "%g" .EP2.Pn}}">
+      <input type="text" name="utilization-rate-2" placeholder="0,29" value="{{printf "%g" .EP2.Kv}}">
+      <input type="text" name="reactive-power-factor-2" placeholder="1" value="{{printf "%g" .EP2.Tg}}">
+    </div>
+
+    <div>
+      <input type="text" name="name-of-EP-3" placeholder="Циркулярна пила" value="{{.EP3.Name}}">
+      <input type="text" name="nominal-value-efficiency-coefficient-3" placeholder="0,92" value="{{printf "%g" .EP3.Eta}}">
+      <input type="text" name="load-power-factor-3" placeholder="0,9" value="{{printf "%g" .EP3.Cos}}">
+      <input type="text" name="load-voltage-3" placeholder="0,38" value="{{printf "%g" .EP3.U}}">
+      <input type="text" name="number-of-EP-3" placeholder="1" value="{{printf "%g" .EP3.N}}">
+      <input type="text" name="nominal-power-of-EP-3" placeholder="36" value="{{printf "%g" .EP3.Pn}}">
+      <input type="text" name="utilization-rate-3" placeholder="0,3" value="{{printf "%g" .EP3.Kv}}">
+      <input type="text" name="reactive-power-factor-3" placeholder="1,64" value="{{printf "%g" .EP3.Tg}}">
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <div class="results">
+    <p><span>Груповий коефіцієнт використання для ШР1=ШР2=ШР3: </span>
+      <span id="result-group-utilization-factor">{{if .Submitted}}{{.GroupUtilizationFactor}}{{end}}</span>
+    </p>
+
+    <p><span>Ефективна кількість ЕП для ШР1=ШР2=ШР3: </span>
+      <span id="result-effective-amount">{{if .Submitted}}{{.EffectiveAmount}}{{end}}</span>
+    </p>
+
+    <p><span>Розрахунковий коефіцієнт активної потужності для ШР1=ШР2=ШР3: </span>
+      <span id="result-active-power-factor">{{if .Submitted}}{{.ActivePowerFactor}}{{end}}</span>
+    </p>
+
+    <p><span>Розрахункове активне навантаження для ШР1=ШР2=ШР3: </span>
+      <span id="result-calculated-active-load">{{if .Submitted}}{{.CalculatedActiveLoad}}{{end}}</span>
+      <span> кВт</span>
+    </p>
+
+    <p><span>Розрахункове реактивне навантаження для ШР1=ШР2=ШР3: </span>
+      <span id="result-calculated-reactive-load">{{if .Submitted}}{{.CalculatedReactiveLoad}}{{end}}</span>
+      <span> квар.</span>
+    </p>
+
+    <p><span>Повна потужність для ШР1=ШР2=ШР3: </span>
+      <span id="result-full-power">{{if .Submitted}}{{.FullPower}}{{end}}</span>
+      <span> кВ*А</span>
+    </p>
+
+    <p><span>Розрахунковий груповий струм для ШР1=ШР2=ШР3: </span>
+      <span id="result-group-current">{{if .Submitted}}{{.GroupCurrent}}{{end}}</span>
+      <span> А</span>
+    </p>
+
+    <p><span>Коефіцієнти використання цеху в цілому: </span>
+      <span id="result-utilization-rates-workshop">{{if .Submitted}}{{.UtilizationRatesWorkshop}}{{end}}</span>
+    </p>
+
+    <p><span>Ефективна кількість ЕП цеху в цілому: </span>
+      <span id="result-effective-number-EP-workshop">{{if .Submitted}}{{.EffectiveNumberEPWorkshop}}{{end}}</span>
+    </p>
+
+    <p><span>Розрахунковий коефіцієнт активної потужності цеху в цілому: </span>
+      <span id="result-coefficient-active-apacity-workshop">{{if .Submitted}}{{.CoefficientActiveApacityWork}}{{end}}</span>
+    </p>
+
+    <p><span>Розрахункове активне навантаження на шинах 0,38 кВ ТП: </span>
+      <span id="result-active-tire-load">{{if .Submitted}}{{.ActiveTireLoad}}{{end}}</span>
+      <span> кВт</span>
+    </p>
+
+    <p><span>Розрахункове реактивне наванантаження на шинах 0,38 кВ ТП: </span>
+      <span id="result-reactive-tire-load">{{if .Submitted}}{{.ReactiveTireLoad}}{{end}}</span>
+      <span> квар.</span>
+    </p>
+
+    <p><span>Повна потужність на шинах 0,38 кВ ТП: </span>
+      <span id="result-full-power-tires">{{if .Submitted}}{{.FullPowerTires}}{{end}}</span>
+      <span> кВ*А</span>
+    </p>
+
+    <p><span>Розрахунковий груповий струм на шинах 0,38 кВ ТП: </span>
+      <span id="result-group-current-tires">{{if .Submitted}}{{.GroupCurrentTires}}{{end}}</span>
+      <span> А</span>
+    </p>
+  </div>
+</section>
+
+</body>
+</html>
