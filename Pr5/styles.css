@@ -1,0 +1,15 @@
+.point-container {
+    display: flex;
+    flex-direction: column;
+}
+.point-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.point-checkbox {
+    margin-right: 10px;
+}
+body{
+    background-color: lavender;
+}
